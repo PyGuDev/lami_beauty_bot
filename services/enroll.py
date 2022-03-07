@@ -25,6 +25,8 @@ class Enroll:
         logging.info(f'get_user = {result}')
         if result:
             if self._is_change_user(result, user):
+                if user.phone is None:
+                    user.phone = result.get('phone')
                 return self.db_manager.update_user(user)
             return True
         else:
@@ -76,6 +78,6 @@ class Enroll:
             return True
         if new_data.first_name != old_data.get('first_name'):
             return True
-        if new_data.phone != old_data.get('phone'):
+        if new_data.phone != old_data.get('phone') and old_data.get('phone') is None:
             return True
         return False

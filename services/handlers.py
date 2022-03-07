@@ -17,6 +17,9 @@ class RecordEventHandler:
     """События записи"""
     def __init__(self, db_manager: DBManager):
         self._db_manager = db_manager
+        self.markup = types.InlineKeyboardMarkup(resize_keyboard=True)
+        enroll = types.InlineKeyboardButton('Записаться', callback_data="enroll")
+        self.markup.add(enroll)
 
     def get_event(self, record_id: int) -> Optional[str]:
         """получить последние событие"""
@@ -98,16 +101,27 @@ class MainHandler(RecordEventHandler):
                 data = {'record_time': record_time}
                 user_data = message.from_user.values
                 if enroll.save_record(user_data, data):
-                    await self.bot.send_message(message.chat.id, text="Вас предворительно записали")
+                    if user_data.get('username') is not None:
+                        await self.bot.send_message(
+                            message.chat.id,
+                            text="Вас предворительно записали",
+                            reply_markup=self.markup
+                        )
+                    else:
+                        await self.bot.send_message(
+                            message.chat.id,
+                            text="Вас предворительно записали"
+                        )
                     # сохраняем событие
                     record = enroll.get_record(message.from_user.id)
                     self.save_event(record.id, Events.ADD_TIME)
-
-                    if user_data.get('username') is None:
+                    if user_data.get('username') is None and user_data.get('phone') is None:
                         await self.bot.send_message(
                             message.chat.id,
-                            text="Укажите номер телефона, желательно"
-                                 "чтобы он был привязан к телеграмму"
+                            text="Укажите номер телефона, желательно "
+                                 "чтобы он был привязан к телеграмму\n"
+                                 "Формат ввода: 8XXXXXXXXXXX начинается с 7 или 8 без "
+                                 "символов +, (, ), -"
                         )
                     else:
                         updated_record = enroll.get_record_with_user(user_id=message.from_user.id)
@@ -135,7 +149,10 @@ class MainHandler(RecordEventHandler):
 
     @staticmethod
     def validate_time(record, record_time: str) -> bool:
-        record_time = time.fromisoformat(record_time)
+        try:
+            record_time = time.fromisoformat(record_time)
+        except ValueError:
+            return False
         now = datetime.now()
         if record.record_date == now.date():
             diff = now + timedelta(hours=1)
@@ -158,9 +175,17 @@ class MainHandler(RecordEventHandler):
             logging.info(f'save phone {data}')
             if enroll.save_user(data):
                 updated_record = enroll.get_record_with_user(user_id=message.from_user.id)
+                await self.bot.send_message(
+                    message.from_user.id,
+                    text="Номер сохранен",
+                    reply_markup=self.markup
+                )
                 # сохраняем событие
                 self.save_event(updated_record.id, Events.ADD_PHONE)
-                await self.bot.send_message(OWNER, text=self.formatting_event_message(updated_record))
+                await self.bot.send_message(
+                    OWNER,
+                    text=self.formatting_event_message(updated_record)
+                )
 
         else:
             await self.bot.send_message(
