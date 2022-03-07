@@ -1,0 +1,4 @@
+aiogram==2.19
+aiogram-dialog=1.2.1
+python-dotenv
+psycopg2-binary==2.9.1
