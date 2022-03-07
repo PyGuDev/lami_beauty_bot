@@ -12,12 +12,12 @@ create table if not exists records(
     user_id integer,
     record_date date,
     record_time time null,
-    created_at date default current_date,
-    updated_at date null,
+    created_at timestamp default current_date,
+    updated_at timestamp null,
     foreign key (user_id) references users(tg_id)
 );
 
-create table if not exists user_event(
+create table if not exists record_event(
     id serial primary key,
     record_id integer,
     event varchar(100) check (event in ('add_date', 'add_time', 'add_phone')),
