@@ -15,6 +15,7 @@ class DB:
 
     def __del__(self):
         self._conn.close()
+        logging.info('close connection')
 
     def _connect(self):
         connect = psycopg2.connect(dsn=self.dsn)
@@ -29,8 +30,8 @@ class DB:
 
 
 class BaseDBManager(DB):
-    def __init__(self):
-        super().__init__(DB_DSN)
+    def __init__(self, dsn: str):
+        super().__init__(dsn)
 
     def write_data(self, sql: str, params: dict):
         self.cursor.execute(sql, params)
@@ -72,6 +73,13 @@ class BaseDBManager(DB):
 
 
 class DBManager(BaseDBManager):
+    def __init__(self, dsn: Optional[str] = None):
+        if dsn:
+            db_dsn = dsn
+        else:
+            db_dsn = DB_DSN
+        super().__init__(db_dsn)
+
     def get_user(self, user: models.User) -> dict:
         params = {
             'tg_id': user.tg_id
@@ -208,14 +216,3 @@ class DBManager(BaseDBManager):
         start_date = now.replace(day=1)
         end_date = now.replace(day=30)
         return start_date, end_date
-
-
-if __name__ == "__main__":
-    user = models.User(
-        id=None,
-        tg_id=1212,
-        username='pygudev',
-        first_name='Евгений',
-        last_name=None
-    )
-    DBManager().save_user(user)

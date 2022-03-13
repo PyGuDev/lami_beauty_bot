@@ -138,6 +138,7 @@ class MainHandler(RecordEventHandler):
                 text="Не правильно укзали время записи, повторите попытку")
 
     async def get_records(self):
+        """Получить записи"""
         enroll = Enroll()
         records = enroll.get_records()
         if records:
@@ -149,6 +150,7 @@ class MainHandler(RecordEventHandler):
 
     @staticmethod
     def validate_time(record, record_time: str) -> bool:
+        """Проверка времени записи"""
         try:
             record_time = time.fromisoformat(record_time)
         except ValueError:
