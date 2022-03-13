@@ -1,0 +1,20 @@
+[
+  {
+    "tg_id": 1212,
+    "username": "test",
+    "last_name": "Petrov",
+    "first_name": "Petr"
+  },
+  {
+    "tg_id": 1213,
+    "username": "test2",
+    "last_name": "Petrov",
+    "first_name": "Petr"
+  },
+  {
+    "tg_id": 1214,
+    "username": "test3",
+    "last_name": "Petrov",
+    "first_name": "Petr"
+  }
+]
