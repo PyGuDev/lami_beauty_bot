@@ -4,6 +4,6 @@ values(%(tg_id)s, %(username)s, %(last_name)s, %(first_name)s)
 """
 
 INSERT_RECORD = """
-insert into records(user_id, record_data, record_time)
-values(%(user_id)s, %(record_date)s, %(record_time))
+insert into records(user_id, record_date, record_time)
+values(%(user_id)s, %(record_date)s, %(record_time)s)
 """
