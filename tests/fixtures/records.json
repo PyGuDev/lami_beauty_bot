@@ -1,0 +1,17 @@
+[
+  {
+    "user_id": 1212,
+    "record_date": "2022-03-12",
+    "record_time": "12:00"
+  },
+  {
+    "user_id": 1213,
+    "record_date": "2022-03-14",
+    "record_time": "15:00"
+  },
+  {
+    "user_id": 1212,
+    "record_date": "2022-05-17",
+    "record_time": "12:00"
+  }
+]
