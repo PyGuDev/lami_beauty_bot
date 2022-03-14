@@ -71,3 +71,4 @@ class TestDbManager(CreateTestDataBase):
 
         data = self.manager.get_record_by_user_id(1212, add_user_data=True)
         assert RecordWithUser(**data)
+

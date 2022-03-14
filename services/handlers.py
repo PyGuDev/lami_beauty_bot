@@ -17,9 +17,6 @@ class RecordEventHandler:
     """События записи"""
     def __init__(self, db_manager: DBManager):
         self._db_manager = db_manager
-        self.markup = types.InlineKeyboardMarkup(resize_keyboard=True)
-        enroll = types.InlineKeyboardButton('Записаться', callback_data="enroll")
-        self.markup.add(enroll)
 
     def get_event(self, record_id: int) -> Optional[str]:
         """получить последние событие"""
@@ -61,6 +58,9 @@ class MainHandler(RecordEventHandler):
     def __init__(self, bot):
         self.bot = bot
         self.enroll = Enroll()
+        self.markup = types.InlineKeyboardMarkup(resize_keyboard=True)
+        enroll_btn = types.InlineKeyboardButton('Записаться', callback_data="enroll")
+        self.markup.add(enroll_btn)
         super().__init__(self.enroll.db_manager)
 
     async def save_record_date(self, user_data: dict, selected_date: date):
